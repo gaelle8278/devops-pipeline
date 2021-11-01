@@ -7,7 +7,7 @@ Vagrant.configure("2") do |config|
     jenkins.vm.box = "debian/bullseye64"
     jenkins.vm.hostname = "p1jenkins"
     jenkins.vm.box_url = "debian/bullseye64"
-    jenkins.vm.network :private_network, ip: "192.168.5.2"
+    jenkins.vm.network :private_network, ip: "172.16.1.2"
     jenkins.vm.provider :virtualbox do |v|
       v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
       v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
@@ -24,7 +24,7 @@ Vagrant.configure("2") do |config|
     srvdev.vm.box = "debian/bullseye64"
     srvdev.vm.hostname = "p1srvdev"
     srvdev.vm.box_url = "debian/bullseye64"
-    srvdev.vm.network :private_network, ip: "192.168.5.3"
+    srvdev.vm.network :private_network, ip: "172.16.1.3"
     srvdev.vm.provider :virtualbox do |v|
       v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
       v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
@@ -40,7 +40,7 @@ Vagrant.configure("2") do |config|
     srvstage.vm.box = "debian/bullseye64"
     srvstage.vm.hostname = "p1srvstage"
     srvstage.vm.box_url = "debian/bullseye64"
-    srvstage.vm.network :private_network, ip: "192.168.5.7"
+    srvstage.vm.network :private_network, ip: "172.16.1.4"
     srvstage.vm.provider :virtualbox do |v|
       v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
       v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
@@ -56,7 +56,7 @@ Vagrant.configure("2") do |config|
     srvprod.vm.box = "debian/bullseye64"
     srvprod.vm.hostname = "p1srvprod"
     srvprod.vm.box_url = "debian/bullseye64"
-    srvprod.vm.network :private_network, ip: "192.168.5.4"
+    srvprod.vm.network :private_network, ip: "172.16.1.5"
     srvprod.vm.provider :virtualbox do |v|
       v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
       v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
@@ -66,11 +66,5 @@ Vagrant.configure("2") do |config|
     end
     srvprod.vm.provision "shell", path: "config_p1ssh.sh"
   end
-  
- 
 
 end
-
-
-
-
