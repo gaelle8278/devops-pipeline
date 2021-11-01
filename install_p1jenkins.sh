@@ -4,7 +4,7 @@
 
 IP=$(hostname -I | awk '{print $2}')
 
-echo "START - install jenkins - "$IP
+echo "=== START - Install Jenkins - "$IP" ===="
 
 echo "[1]: install utils"
 apt-get update -qq >/dev/null
@@ -16,11 +16,11 @@ apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367 >/dev/
 apt-get update -qq >/dev/null
 apt-get install -qq -y ansible >/dev/null
 
-echo "[3]: ansible custom"
+echo "[3]: ansible custom configuration"
 sed -i 's/.*pipelining.*/pipelining = True/' /etc/ansible/ansible.cfg
 sed -i 's/.*allow_world_readable_tmpfiles.*/allow_world_readable_tmpfiles = True/' /etc/ansible/ansible.cfg
 
-echo "[4] install java"
+echo "[4]: install java"
 #wget "https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jdk_x64_linux_hotspot_11.0.13_8.tar.gz"
 #tar xzf OpenJDK11U-jdk_x64_linux_hotspot_11.0.13_8.tar.gz -C /opt/
 #echo 'export PATH=/opt/jdk-11.0.13+8/bin:$PATH' >> ~/.bashrc
@@ -46,7 +46,7 @@ usermod -aG docker jenkins # authorize docker for jenkins user
 curl -sL "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
 
-echo "[7]: use registry without ssl"
+echo "[7]: use docker registry without ssl"
 echo "
 {
  \"insecure-registries\" : [\"192.168.5.5:5000\"]
@@ -55,5 +55,5 @@ echo "
 systemctl daemon-reload
 systemctl restart docker
 
-echo "END - install jenkins"
+echo "=== END - Install Jenkins - "$IP" ===="
 
