@@ -102,4 +102,21 @@ Vagrant.configure("2") do |config|
     srvbdd.vm.provision "shell", path: "install_p1srvmysql.sh"
   end
 
+  # Serveur registry
+  config.vm.define "p1registry" do |registry|
+    registry.vm.box = "debian/bullseye64"
+    registry.vm.hostname = "p1registry"
+    registry.vm.box_url = "debian/bullseye64"
+    registry.vm.network :private_network, ip: "172.16.1.8"
+    registry.vm.provider :virtualbox do |v|
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+      v.customize ["modifyvm", :id, "--memory", 512]
+      v.customize ["modifyvm", :id, "--name", "p1registry"]
+      v.customize ["modifyvm", :id, "--cpus", "1"]
+    end
+    registry.vm.provision "shell", path: "config_p1ssh.sh"
+    registry.vm.provision "shell", path: "install_p1registry.sh"
+  end
+
 end
