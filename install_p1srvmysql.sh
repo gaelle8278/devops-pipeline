@@ -31,13 +31,23 @@ sudo debconf-set-selections <<< 'mysql-community-server mysql-community-server/r
 sudo debconf-set-selections <<< 'mysql-community-server mysql-community-server/re-root-pass password root'
 sudo -E apt-get install -y -qq mysql-community-server >/dev/null
 
-echo "[6]: create databases"
+echo "[6]: configure MySQL"
+mysql -u root -proot -e 'USE mysql; UPDATE `user` SET `Host`="%" WHERE `User`="root" AND `Host`="localhost"; DELETE FROM `user` WHERE `Host` != "%" AND `User`="root"; FLUSH PRIVILEGES;'
 
-echo "[7]: configure MySQL"
+echo "[7]: create databases"
+mysql  -u root -proot -e "CREATE DATABASE dev /*\!40100 DEFAULT CHARACTER SET utf8 */;"
+mysql  -u root -proot -e "CREATE DATABASE stage /*\!40100 DEFAULT CHARACTER SET utf8 */;"
+mysql  -u root -proot -e "CREATE DATABASE prod /*\!40100 DEFAULT CHARACTER SET utf8 */;"
+mysql  -u root -proot -e "CREATE USER vagrant@localhost IDENTIFIED BY 'vagarant';"
+mysql  -u root -proot -e "GRANT ALL PRIVILEGES ON dev.* TO 'vagrant'@'localhost';"
+mysql  -u root -proot -e "GRANT ALL PRIVILEGES ON stage.* TO 'vagrant'@'localhost';"
+mysql  -u root -proot -e "GRANT ALL PRIVILEGES ON prod.* TO 'vagrant'@'localhost';"
+mysql  -u root -proot -e "FLUSH PRIVILEGES;"
 
-echo "[8]: ouverture du port Mysql dans le pare-feu"
+echo "[8]: open Mysql port in firewall"
 sudo iptables -A INPUT -s 10.10.10.126 -p tcp --destination-port 3306 -j ACCEPT
 
 echo "[9]: restart MySQL"
+service mysql restart
 
 echo "=== END - Install MySQL - "$IP" ==="
