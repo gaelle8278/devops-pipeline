@@ -19,10 +19,11 @@ curl -sL "https://github.com/docker/compose/releases/download/1.29.2/docker-comp
 chmod +x /usr/local/bin/docker-compose
 
 echo "[3]: install registry"
+cd /home/vagrant
 mkdir certs/
 openssl req -x509 -newkey rsa:4096 -nodes -keyout certs/myregistry.key -out certs/myregistry.crt -days 365 -subj /CN=myregistry.my
 mkdir passwd/
-docker run --entrypoint htpasswd registry:2 -Bbn gaelle gaelle > passwd/htpasswd
+docker run --entrypoint htpasswd registry:2.7.0 -Bbn gaelle gaelle > passwd/htpasswd
 
 mkdir data/
 echo "
@@ -30,7 +31,7 @@ version: '3.5'
 services:
   registry:
     restart: always
-    image: registry:2
+    image: registry:2.7.0
     container_name: registry
     ports:
       - 5000:5000
@@ -41,9 +42,9 @@ services:
       REGISTRY_AUTH_HTPASSWD_PATH: /auth/htpasswd
       REGISTRY_AUTH_HTPASSWD_REALM: Registry Realm
     volumes:
-      - ./data:/var/lib/registry
-      - ./certs:/certs
-      - ./passwd:/auth
+      - /home/vagrant/data:/var/lib/registry
+      - /home/vagrant/certs:/certs
+      - /home/vagrant/passwd:/auth
 " > docker-compose-registry.yml
 
 docker-compose -f docker-compose-registry.yml up -d
