@@ -119,4 +119,22 @@ Vagrant.configure("2") do |config|
     registry.vm.provision "shell", path: "install_p1registry.sh"
   end
 
+   # Serveur gitlab : installer sur Debian Buster(10) car pas dispo pour Debian Bullseye (11)
+   config.vm.define "p1gitlab" do |gitlab|
+    gitlab.vm.box = "debian/buster64"
+    gitlab.vm.hostname = "p1gitlab"
+    gitlab.vm.box_url = "debian/buster64"
+    gitlab.vm.network :private_network, ip: "172.16.1.9"
+    gitlab.vm.provider :virtualbox do |v|
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+      v.customize ["modifyvm", :id, "--memory", 3072]
+      v.customize ["modifyvm", :id, "--name", "p1gitlab"]
+      v.customize ["modifyvm", :id, "--cpus", "1"]
+    end
+    gitlab.vm.provision "shell", path: "config_p1ssh.sh"
+    gitlab.vm.provision "shell", path: "install_p1gitlab.sh"
+  end
+
+
 end
